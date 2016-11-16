@@ -104,7 +104,7 @@ if(isset($_FILES['f']) && $param == "") {
 		mkdir($datafolder.$foldername, 0777, true);
 		$matches = false;
 		foreach ($allowedtypes as $pattern) {
-			if (preg_match($pattern, $_FILES['f']['type'])) {
+			if (preg_match($pattern, $_FILES['f']['type']) == 1) {
 				$matches = true;
 			}
 		}
@@ -113,10 +113,10 @@ if(isset($_FILES['f']) && $param == "") {
 			$log .= " invalid filetype ".$_FILES['f']['type'];
 			$response['error'] = "invalid filetype ".$_FILES['f']['type'];
 		}
-//		elseif(preg_match('/(base64|eval|javascript|\$_|\$\$|script)/i',file_get_contents($_FILES['f']['tmp_name']))) {
-//			$response['error'] = "invalid file";
-//			$log .= " invalid file";
-//		}
+		elseif(preg_match('/(base64|eval|script)/i',file_get_contents($_FILES['f']['tmp_name'])) == 1) {
+			$response['error'] = "invalid file";
+			$log .= " invalid file";
+		}
 		elseif(move_uploaded_file($_FILES['f']['tmp_name'], $datafile)) {
 			$log .= " saved";
 

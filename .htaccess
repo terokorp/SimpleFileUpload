@@ -1,0 +1,5 @@
+DirectoryIndex index.html index.php upload.php
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ upload.php/$1?%{QUERY_STRING} [L]

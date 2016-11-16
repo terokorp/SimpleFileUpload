@@ -5,16 +5,15 @@ function random_str($length, $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzAB
 {
 	$str = '';
 	$max = mb_strlen($keyspace, '8bit') - 1;
-	if(version_compare(phpversion(), '7', '<')) {
+
+	if(function_exists('random_int')) {
 		for ($i = 0; $i < $length; ++$i) {
-			//$str .= $keyspace[mt_rand(0, $max)];
 			$str .= $keyspace[random_int(0, $max)];
 		}
 	}
 	else {
 		for ($i = 0; $i < $length; ++$i) {
 			$str .= $keyspace[mt_rand(0, $max)];
-			//$str .= $keyspace[random_int(0, $max)];
 		}
 	}
 	return $str;
@@ -64,9 +63,11 @@ if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
 	$ip = $_SERVER['REMOTE_ADDR'];
 }
 
-$scriptfolder = dirname($_SERVER['DOCUMENT_URI'])."/";
-if (substr($_SERVER['REQUEST_URI'], 0, strlen($scriptfolder)) == $scriptfolder) {
-	$param = substr($_SERVER['REQUEST_URI'], strlen($scriptfolder));
+$documenturi = ($_SERVER['DOCUMENT_URI'] ? $_SERVER['DOCUMENT_URI'] : "");
+$requesturi =  ($_SERVER['REQUEST_URI']  ? $_SERVER['REQUEST_URI'] : "");
+$scriptfolder = dirname($documenturi)."/";
+if (substr($requesturi, 0, strlen($scriptfolder)) == $scriptfolder) {
+	$param = substr($requesturi, strlen($scriptfolder));
 	$pos = strpos($param, "?");
 	if(!empty($pos)) $param = substr($param, 0, $pos);
 	$param = urldecode($param);
@@ -112,10 +113,10 @@ if(isset($_FILES['f']) && $param == "") {
 			$log .= " invalid filetype ".$_FILES['f']['type'];
 			$response['error'] = "invalid filetype ".$_FILES['f']['type'];
 		}
-		elseif(preg_match('/(base64|eval|javascript|\$_|\$\$|script)/i',file_get_contents($_FILES['f']['tmp_name']))) {
-			$response['error'] = "invalid file";
-			$log .= " invalid file";
-		}
+//		elseif(preg_match('/(base64|eval|javascript|\$_|\$\$|script)/i',file_get_contents($_FILES['f']['tmp_name']))) {
+//			$response['error'] = "invalid file";
+//			$log .= " invalid file";
+//		}
 		elseif(move_uploaded_file($_FILES['f']['tmp_name'], $datafile)) {
 			$log .= " saved";
 
@@ -126,9 +127,9 @@ if(isset($_FILES['f']) && $param == "") {
 				else $log .= " gdlib not found";
 			}
 
-			$response['url']=	$url.$foldername.$filename;
-			if($image) $response['thumbnail']= $url.$foldername.$filename."?thumb";
-			$response['deleteurl']=	$url.$foldername.$filename."?del&key=";
+			$response['url']=	$url.$foldername.rawurlencode($filename);
+			if($image) $response['thumbnail']= $url.$foldername.rawurlencode($filename)."?thumb";
+			$response['deleteurl']=	$url.$foldername.rawurlencode($filename)."?del&key=";
 			$response['key']=	random_str(16);
 
 			$response['upload_ts']=	date('c');

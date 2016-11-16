@@ -1,0 +1,26 @@
+<?php
+$key		= "";					// requred key to upload file, empty=everyone can upload
+$url		= "http://files.example.com/";		// Full url to site
+$datafolder	= "./data/";				// Data folder
+
+$thumb_w	= 200;					// Thumbnail size
+$thumb_h	= 200;
+
+$allowedtypes = array(					// Allowed mime types
+	'/^text\/plain$/',
+	'/^image\//',
+	'/^audio\//',
+	'/^video\//',
+);
+
+function makefoldername($remoteip, $originalfilename) {	// Build save folder name
+	// Foldername have to end with slash
+	return random_str(4, "0123456789abcdef") . "/" . random_str(16)."/";
+}
+
+function makefilename($remoteip, $originalfilename) {	// Build filename
+	if(preg_match("/^[a-z0-9\ \-\_\.]+$/i", $originalfilename) != 1) {
+		return random_str(8).".".$ext;
+	}
+	else return $originalfilename;
+}

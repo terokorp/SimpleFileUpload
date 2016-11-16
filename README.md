@@ -1,6 +1,6 @@
 # Features
 * Image upload
-* ShareX support
+* ShareX support (get it here: https://github.com/ShareX/ShareX/releases/latest )
 
 # Requirements
 * php-mbstring or php7.0-mbstring

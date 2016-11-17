@@ -127,24 +127,25 @@ if(isset($_FILES['f']) && $param == "") {
 				else $log .= " gdlib not found";
 			}
 
-			$response['url']=	$url.$foldername.rawurlencode($filename);
-			if($image) $response['thumbnail']= $url.$foldername.rawurlencode($filename)."?thumb";
-			$response['deleteurl']=	$url.$foldername.rawurlencode($filename)."?del&key=";
 			$response['key']=	random_str(16);
 
-			$response['upload_ts']=	date('c');
+			$data['path']		= $foldername.rawurlencode($filename);
+			$data['key']		= password_hash($response['key'], PASSWORD_DEFAULT);
+			$data['upload_ip']	= $ip;
+			$data['file_name']	= $_FILES['f']['name'];
+			$data['file_type']	= $_FILES['f']['type'];
+			$data['file_size']	= $_FILES['f']['size'];
+
+			$response['url']	= $url.$foldername.rawurlencode($filename);
+			$response['deleteurl']	= $url.$foldername.rawurlencode($filename) . "?del&key=" . $response['key'];
+			$response['thumbnail']	= $url.$foldername.rawurlencode($filename) . "?thumb";
+			$response['upload_ts']	= date('c');
 			if(is_array($imageinfo)){
+				$data['imageinfo'] = $imageinfo;
 				$response['imageinfo'] = $imageinfo;
 			}
 
-			$data=$response;
 
-			$response['deleteurl'] .= $response['key'];
-			$data['upload_ip'] = $ip;
-			$data['key'] = password_hash($response['key'], PASSWORD_DEFAULT);
-			$data['file_name'] = $_FILES['f']['name'];
-			$data['file_type'] = $_FILES['f']['type'];
-			$data['file_size'] = $_FILES['f']['size'];
 			file_put_contents($jsonfile, json_encode($data), FILE_APPEND);
 			$log .= " $url$foldername$filename ({$_FILES['f']['name']})";
 		}
@@ -229,9 +230,9 @@ if(is_file($datafolder.$param.".json")) {
 		if(password_verify($key ,$json['key'])) {
 			buildpage("uploaded.html", array(
 				'baseurl' => $url,
-				'url' => $json['url'],
-				'thumbnail' => @$json['thumbnail'],
-				'deleteurl' => @$json['deleteurl'].$key,
+				'url' =>       $url.$json['path'],
+				'thumbnail' => $url.$json['path']."?thumb",
+				'deleteurl' => $url.$json['path']."?del&key=".$key,
 				'upload_ts' => @$json['upload_ts'],
 				'imagesize' => @$json['imageinfo'][0]."x".$json['imageinfo'][1],
 				'file_size' => @$json['file_size'],

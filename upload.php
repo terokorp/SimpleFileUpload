@@ -63,9 +63,9 @@ if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
 	$ip = $_SERVER['REMOTE_ADDR'];
 }
 
-$documenturi = ($_SERVER['DOCUMENT_URI'] ? $_SERVER['DOCUMENT_URI'] : "");
+$scriptname = ($_SERVER['SCRIPT_NAME'] ? $_SERVER['SCRIPT_NAME'] : "");
 $requesturi =  ($_SERVER['REQUEST_URI']  ? $_SERVER['REQUEST_URI'] : "");
-$scriptfolder = dirname($documenturi)."/";
+$scriptfolder = dirname($scriptname)."/";
 if (substr($requesturi, 0, strlen($scriptfolder)) == $scriptfolder) {
 	$param = substr($requesturi, strlen($scriptfolder));
 	$pos = strpos($param, "?");

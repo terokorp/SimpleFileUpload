@@ -65,7 +65,7 @@ if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
 
 $scriptname = ($_SERVER['SCRIPT_NAME'] ? $_SERVER['SCRIPT_NAME'] : "");
 $requesturi =  ($_SERVER['REQUEST_URI']  ? $_SERVER['REQUEST_URI'] : "");
-$scriptfolder = dirname($scriptname)."/";
+$scriptfolder = ltrim(dirname($scriptname),'/')."/";
 if (substr($requesturi, 0, strlen($scriptfolder)) == $scriptfolder) {
 	$param = substr($requesturi, strlen($scriptfolder));
 	$pos = strpos($param, "?");

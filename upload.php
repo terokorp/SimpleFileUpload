@@ -1,6 +1,13 @@
 <?php
 require("config.php");
 
+
+if(!function_exists('mb_strlen')) {
+	echo("mbstring is not installed");
+	header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
+	die();
+}
+
 function random_str($length, $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_')
 {
 	$str = '';
@@ -74,7 +81,7 @@ if (substr($requesturi, 0, strlen($scriptfolder)) == $scriptfolder) {
 	if($param=="upload.php") $param ="";
 }
 
-if ($param == "robot.txt") { die("User-agent: *\nDisallow: /"); }
+if ($param == "robots.txt") { die("User-agent: *\nDisallow: /"); }
 
 if(isset($_FILES['f']) && $param == "") {
 	$log = date('c')." ".$ip;

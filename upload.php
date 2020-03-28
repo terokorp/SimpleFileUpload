@@ -163,8 +163,8 @@ if(isset($_FILES['f']) && $param == "") {
 
 	}
 
-	if($_POST['type']) @$type=$_POST['type'];
-	if($_GET['type'])  @$type=$_GET['type'];
+	if(isset($_POST['type'])) @$type=$_POST['type'];
+	if(isset($_GET['type']))  @$type=$_GET['type'];
 	switch($type) {
 		case "json":
 			header("Content-Type: application/json");
@@ -258,7 +258,7 @@ if(is_file($datafolder.$param.".json")) {
 		header('Content-Type: ' . $json['file_type']);
 		header('Content-Length: ' . $json['file_size']);
 		header('Content-Transfer-Encoding: binary');
-		header('Content-Disposition: filename="'.$json[file_name].'"');
+		header('Content-Disposition: filename="'.$json['file_name'].'"');
 		readfile($datafolder.$param.".data");
 		exit();
 	}
